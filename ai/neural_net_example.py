@@ -7,7 +7,7 @@ from utils.model_selection import train_test_split
 from deep_learning.models import Neural_Networks
 from deep_learning.layers import Dense, Activation
 from deep_learning.optimizers import (GradientDescent, StochasticGradientDescent,
-									 Adagrad, Adadelta, RMSProp, Adam)
+									 Adagrad, Adadelta, RMSProp, Adam, Adamax)
 from deep_learning.loss_functions import SquareLoss
 
 from utils.data_manipulation import R_square, mean_squared_error
@@ -33,7 +33,9 @@ def main():
 	Adad = Adadelta(rho = 0.9, epsilon = 1e-6)
 	RMS = RMSProp(learning_rate = 0.01)
 	Adam_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
-	model = Neural_Networks(optimizer = Adam_opt,
+	Adamax_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
+	NAdam_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
+	model = Neural_Networks(optimizer = NAdam_opt,
 							loss = SquareLoss,
 							validation_data = validation_data)
 	model.add(Dense(200, input_shape=(n_features,)))
@@ -43,7 +45,7 @@ def main():
 	model.add(Dense(2))
 	model.add(Activation('linear'))
 
-	train_err, val_err = model.fit(X_train,y_train, n_epochs = 2000, batch_size=8)
+	train_err, val_err = model.fit(X_train,y_train, n_epochs = 500, batch_size=8)
 
 	y_train_pred = model.predict(X_train)
 	print("===Training results===")
