@@ -34,7 +34,7 @@ def main():
 	RMS = RMSProp(learning_rate = 0.01)
 	Adam_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
 	Adamax_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
-	NAdam_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
+	NAdam_opt = Adam(learning_rate = 0.005, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
 	model = Neural_Networks(optimizer = NAdam_opt,
 							loss = SquareLoss,
 							validation_data = validation_data)
