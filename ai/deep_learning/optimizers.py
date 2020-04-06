@@ -104,15 +104,59 @@ class Adam():
 		
 		return weight - self.learning_rate * self.ms / (np.sqrt(self.vs)+ self.epsilon)
 
+class Adamax():
+	def __init__(self, learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8):
+		self.learning_rate = learning_rate
+		self.beta_1 = beta_1
+		self.beta_2 = beta_2
+		self.epsilon = epsilon
+		self.time_step = 0
+		self.vt = None
+		self.ut = None
 
+	def get_update(self, weight, gradient):
+		if self.ms is None:
+			self.vt = np.zeros(np.shape(weight))
 
+		if self.vs is None:
+			self.ut = np.zeros(np.shape(weight))
 
+		self.time_step += 1
 
+		self.vt = self.beta_1 * self.vt + (1- self.beta_1) * gradient
+		self.ut = np.maximum(self.beta_2 * self.ut, np.abs(gradient))
 
+		# self.learning_rate = self.learning_rate*np.sqrt(1 - self.beta_2** self.time_step) / (1 - self.beta_1**self.time_step)
+		# print(self.learning_rate)
+		
+		return weight - self.learning_rate * self.vt/ (self.ut+ self.epsilon)
 
+class NAdam():
+	def __init__(self, learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8):
+		self.learning_rate = learning_rate
+		self.beta_1 = beta_1
+		self.beta_2 = beta_2
+		self.epsilon = epsilon
+		self.time_step = 0
+		self.mt = None
+		self.vt = None
 
+	def get_update(self, weight, gradient):
+		if self.ms is None:
+			self.mt = np.zeros(np.shape(weight))
 
+		if self.vs is None:
+			self.vt = np.zeros(np.shape(weight))
 
+		self.mt = self.beta_1 * self.mt + (1- self.beta_1) * gradient
+		self.mt_bar = self.mt/(1 - self.beta_1)
 
+		self.vt = self.beta_2 * self.vt + (1 - self.beta_2) * np.power(gradient, 2)
+		self.vt_bar = self.vt/(1 - self.beta_2)
+
+		# self.learning_rate = self.learning_rate*np.sqrt(1 - self.beta_2** self.time_step) / (1 - self.beta_1**self.time_step)
+		# print(self.learning_rate)
+		
+		return weight - self.learning_rate * (self.mt_bar * self.beta_1 + (1 - self.beta_1)/self.beta_1 *gradient)/ (np.sqrt(self.vt_bar)+ self.epsilon)
 
 
