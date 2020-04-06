@@ -6,7 +6,8 @@ from utils.model_selection import train_test_split
 
 from deep_learning.models import Neural_Networks
 from deep_learning.layers import Dense, Activation
-from deep_learning.optimizers import GradientDescent
+from deep_learning.optimizers import (GradientDescent, StochasticGradientDescent,
+									 Adagrad, Adadelta, RMSProp, Adam)
 from deep_learning.loss_functions import SquareLoss
 
 from utils.data_manipulation import R_square, mean_squared_error
@@ -26,8 +27,13 @@ def main():
 	X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, 0.1, shuffle = True, seed = 1000)
 	validation_data = (X_val, y_val)
 
-	optimizer = GradientDescent(0.01)
-	model = Neural_Networks(optimizer = optimizer,
+	GD = GradientDescent(0.01)
+	SGD = StochasticGradientDescent(learning_rate = 0.01, momentum = 0.9, nesterov = True)
+	Ada = Adagrad(learning_rate = 0.01, epsilon = 1e-6)
+	Adad = Adadelta(rho = 0.9, epsilon = 1e-6)
+	RMS = RMSProp(learning_rate = 0.01)
+	Adam_opt = Adam(learning_rate = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-6)
+	model = Neural_Networks(optimizer = Adam_opt,
 							loss = SquareLoss,
 							validation_data = validation_data)
 	model.add(Dense(200, input_shape=(n_features,)))
