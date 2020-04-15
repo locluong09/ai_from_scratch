@@ -40,7 +40,7 @@ class Adagrad():
 	def get_update(self, weight, gradient):
 		if self.accumulator is None:
 			self.accumulator = np.zeros(np.shape(weight))
-		self.accumulator += np.power(gradient,2)
+		self.accumulator += np.square(gradient)
 		return weight - self.learning_rate*gradient/(np.sqrt(self.accumulator + self.epsilon))
 
 class Adadelta():
@@ -98,7 +98,7 @@ class Adam():
 
 		self.ms = self.beta_1 * self.ms + (1- self.beta_1) * gradient
 		self.vs = self.beta_2 * self.vs + (1- self.beta_2) * np.power(gradient, 2)
-
+		# print(self.time_step)
 		# self.learning_rate = self.learning_rate*np.sqrt(1 - self.beta_2** self.time_step) / (1 - self.beta_1**self.time_step)
 		# print(self.learning_rate)
 		
