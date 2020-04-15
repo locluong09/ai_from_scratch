@@ -10,6 +10,7 @@ class Neural_Networks():
 		self.errors = {"training": [], "validation":[]}
 		self.loss_function = loss()
 		self.validation_set = None
+		self.iterations = 0
 		if validation_data:
 			X, y = validation_data
 			self.validation_set = {"X": X, "y": y}
@@ -24,6 +25,7 @@ class Neural_Networks():
 
 		if hasattr(layer, 'set_optimizer'):
 			layer.set_optimizer(self.optimizer)
+			layer.iterations = self.iterations
 
 		self.layers.append(layer)
 
@@ -59,6 +61,8 @@ class Neural_Networks():
 	def fit(self, X, y, n_epochs, batch_size):
 		#Method to fit neural networks with the data samples.
 		for i in range(n_epochs):
+			self.iterations += 1
+			# print(self.iterations)
 			batch_error = []
 			for X_batch, y_batch in batch_iterator(X, y, batch_size = batch_size):
 				loss, acc = self.train(X_batch, y_batch)
